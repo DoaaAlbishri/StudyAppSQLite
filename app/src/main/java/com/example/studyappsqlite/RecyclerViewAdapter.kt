@@ -33,12 +33,10 @@ class RecyclerViewAdapter(private val c : Context ,private val words: ArrayList<
             tv.text=word.title
             tv2.text=word.More
             editBtn.setOnClickListener {
-                if(word.type == "android") {
-                    val obj = Android()
-                  //  obj.update(word.title)
-                }else{
-                    val obj = Kotlin()
-                  //  obj.update(word.title)
+                if(c is Android) {
+                    c.update(word.title,word.More,word.des)
+                }else if (c is Kotlin){
+                    c.update(word.title,word.More,word.des)
                 }
             }
             delBtn.setOnClickListener {
@@ -68,7 +66,7 @@ class RecyclerViewAdapter(private val c : Context ,private val words: ArrayList<
             // create dialog box
             val alert = dialogBuilder.create()
             // set title for alert dialog box
-            alert.setTitle("$word")
+            alert.setTitle("${word.title}")
             // add the Edit Text
            // alert.setView(input)
             // show alert dialog

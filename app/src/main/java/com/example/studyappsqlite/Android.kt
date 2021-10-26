@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,11 +16,12 @@ import androidx.recyclerview.widget.RecyclerView
 class Android : AppCompatActivity() {
     var list = ArrayList<Note>()
     lateinit var myRv : RecyclerView
+    lateinit var dbhlr :DBHlr2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_android)
         setTitle("Android Review")
-        var dbhlr :DBHlr2 = DBHlr2(this)
+        dbhlr = DBHlr2(this)
         var myLayout = findViewById<ConstraintLayout>(R.id.clMain)
         var btnAdd = findViewById<Button>(R.id.button4)
         /*
@@ -26,55 +29,59 @@ class Android : AppCompatActivity() {
         dbhlr.savedata("android","Documentation", "official documentation", "Android Studio Documentation - https://developer.android.com/docs")
         dbhlr.savedata("android","Resource Files", "some resource files in the Project Overview", "colors.xml and themes.xml files. Making changes to these files allows us to set a base color for every UI Element (more on those later) we create. These UI Elements can then be changed individually if we choose to do so.")
          */
-        btnAdd.setOnClickListener {
-            val intent = Intent(this, NewNote::class.java)
-            startActivity(intent)
-        }
-        list = dbhlr.retrive("android")
         myRv = findViewById<RecyclerView>(R.id.myRv)
-        myRv.adapter = RecyclerViewAdapter(this,list)
-        myRv.layoutManager = LinearLayoutManager(this)
+        myRv()
+        btnAdd.setOnClickListener {
+            val dialogBuilder = AlertDialog.Builder(this)
+            val dialogView = layoutInflater.inflate(R.layout.add_dialog, null)
+            dialogBuilder.setTitle("Alert Dialog")
+            dialogBuilder.setView(dialogView)
+            val edtitle = dialogView.findViewById<EditText>(R.id.edtitle1)
+            val edmore = dialogView.findViewById<EditText>(R.id.edmore1)
+            val eddes = dialogView.findViewById<EditText>(R.id.eddes1)
+            val tvBtn = dialogView.findViewById<Button>(R.id.button6)
+            tvBtn.setOnClickListener {
+                var title =edtitle.text.toString()
+                var expl =edmore.text.toString()
+                var des =eddes.text.toString()
+                dbhlr.savedata("android",title,expl,des)
+                Toast.makeText(this, "added successfully", Toast.LENGTH_SHORT).show()
+                //retrieve data and update recycler view
+                myRv()
+            }
+            dialogBuilder.show()
+        }
     }
     fun update(s1:String,s2:String, s3:String){
-        //first we create a variable to hold an AlertDialog builder
         val dialogBuilder = AlertDialog.Builder(this)
-        // then we set up the input
-        val input = EditText(this)
-        input.hint="Enter new note"
-        // here we set the message of our alert dialog
-        //dialogBuilder.setMessage("Update Note")
-        // positive button text and action
-        dialogBuilder.setPositiveButton("ok", DialogInterface.OnClickListener { dialog, id ->
-            var dbhlr = DBHlr2(this)
-            val str = input.text.toString()
-        //    dbhlr.update(s1, str)
-            println("updated item")
+        val dialogView = layoutInflater.inflate(R.layout.update_dialog, null)
+        dialogBuilder.setTitle("Alert Dialog")
+        dialogBuilder.setView(dialogView)
+        val edtitle = dialogView.findViewById<EditText>(R.id.edtitle2)
+        val edmore = dialogView.findViewById<EditText>(R.id.edmore2)
+        val eddes = dialogView.findViewById<EditText>(R.id.eddes2)
+        val tvBtn = dialogView.findViewById<Button>(R.id.button7)
+        tvBtn.setOnClickListener {
+            var title =edtitle.text.toString()
+            var expl =edmore.text.toString()
+            var des =eddes.text.toString()
+            dbhlr.update("android",s1,s2,s3,title,expl,des)
+            Toast.makeText(this, "updated successfully", Toast.LENGTH_SHORT).show()
             //retrieve data and update recycler view
-        })
-                // negative button text and action
-                .setNegativeButton("cancel", DialogInterface.OnClickListener { dialog, id ->
-                })
-        // create dialog box
-        val alert = dialogBuilder.create()
-        // set title for alert dialog box
-        alert.setTitle("Update Note")
-        // add the Edit Text
-        alert.setView(input)
-        // show alert dialog
-        alert.show()
+            myRv()
+        }
+        dialogBuilder.show()
     }
 
     fun delete(type:String , s1:String){
-        var dbhlr = DBHlr2(this)
         dbhlr.delete(type,s1)
         println("deleted item")
         //retrieve data and update recycler view
-        val list = dbhlr.retrive("android")
-        myRv.adapter = RecyclerViewAdapter(this,list)
-        myRv.layoutManager = LinearLayoutManager(this)
+        myRv()
     }
 
     fun myRv(){
+        val list = dbhlr.retrive("android")
         myRv.adapter = RecyclerViewAdapter(this,list)
         myRv.layoutManager = LinearLayoutManager(this)
     }

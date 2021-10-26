@@ -62,24 +62,24 @@ class DBHlr2(context: Context?) : SQLiteOpenHelper(context, "details.db", null, 
         return list
     }
 
-    fun updateTitle(s1 :String , news1 :String){
+    fun update(type:String ,s1 :String ,s2 :String, s3 :String, news1 :String,news2 :String,news3 :String) {
         val cv = ContentValues()
-        cv.put("Title", news1)
-        sql.update("kotlin",  cv, "Title=?", arrayOf(s1))
+        if (type == "android") {
+            cv.put("Title", news1)
+            cv.put("More", news2)
+            cv.put("Des", news3)
+            sql.update("android", cv, "Title=?", arrayOf(s1))
+            sql.update("android", cv, "More=?", arrayOf(s2))
+            sql.update("android", cv, "Des=?", arrayOf(s3))
+        } else {
+            cv.put("Title", news1)
+            cv.put("More", news2)
+            cv.put("Des", news3)
+            sql.update("kotlin", cv, "Title=?", arrayOf(s1))
+            sql.update("kotlin", cv, "More=?", arrayOf(s2))
+            sql.update("kotlin", cv, "Des=?", arrayOf(s3))
+        }
     }
-
-
-
-    fun update(s1 :String ,s2 :String, s3 :String, news1 :String,news2 :String,news3 :String){
-        val cv = ContentValues()
-        cv.put("Title", news1)
-        cv.put("More", news2)
-        cv.put("Des", news3)
-        sql.update("android",  cv, "Title=?", arrayOf(s1))
-        sql.update("android",  cv, "More=?", arrayOf(s1))
-        sql.update("android",  cv, "Des=?", arrayOf(s1))
-    }
-
     fun delete(type:String, s1 :String){
         if(type=="android") {
             sql.delete("android", "Title=?", arrayOf(s1))
