@@ -10,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_row.view.*
 
 
-class RecyclerViewAdapter(private val words: ArrayList<Note>) : RecyclerView.Adapter<RecyclerViewAdapter.ItemViewHolder>(){
+class RecyclerViewAdapter(private val c : Context ,private val words: ArrayList<Note>) : RecyclerView.Adapter<RecyclerViewAdapter.ItemViewHolder>(){
 
     class ItemViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView)
+    lateinit var dbhlr : DBHlr2
 
     var ctx: Context? = null
 
@@ -27,30 +28,29 @@ class RecyclerViewAdapter(private val words: ArrayList<Note>) : RecyclerView.Ada
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val word=words[position]
-
+        dbhlr = DBHlr2(c)
         holder.itemView.apply{
             tv.text=word.title
             tv2.text=word.More
             editBtn.setOnClickListener {
                 if(word.type == "android") {
                     val obj = Android()
-                    obj.update(word.title)
+                  //  obj.update(word.title)
                 }else{
                     val obj = Kotlin()
                   //  obj.update(word.title)
                 }
             }
             delBtn.setOnClickListener {
-                if(word.type == "android") {
-                    val obj = Android()
-                 //   obj.delete(word.title)
-                }else{
-                    val obj = Kotlin()
-                 //    obj.delete(word.title)
+                if(c is Android) {
+                   //dbhlr.delete("android",word.title)
+                    c.delete("android",word.title)
+                }else if (c is Kotlin){
+                    //dbhlr.delete("kotlin",word.title)
+                    c.delete("kotlin",word.title)
                 }
             }
         }
-
 
         holder.itemView.setOnClickListener {
             println("hello world")

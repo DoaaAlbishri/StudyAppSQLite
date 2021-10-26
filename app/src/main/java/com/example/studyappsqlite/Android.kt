@@ -1,14 +1,19 @@
 package com.example.studyappsqlite
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class Android : AppCompatActivity() {
+    var list = ArrayList<Note>()
+    lateinit var myRv : RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_android)
@@ -25,15 +30,58 @@ class Android : AppCompatActivity() {
             val intent = Intent(this, NewNote::class.java)
             startActivity(intent)
         }
-        val list = dbhlr.retrive("android")
-        val myRv = findViewById<RecyclerView>(R.id.myRv)
-        myRv.adapter = RecyclerViewAdapter(list)
+        list = dbhlr.retrive("android")
+        myRv = findViewById<RecyclerView>(R.id.myRv)
+        myRv.adapter = RecyclerViewAdapter(this,list)
         myRv.layoutManager = LinearLayoutManager(this)
     }
-    fun update(s1:String){
+    fun update(s1:String,s2:String, s3:String){
+        //first we create a variable to hold an AlertDialog builder
+        val dialogBuilder = AlertDialog.Builder(this)
+        // then we set up the input
+        val input = EditText(this)
+        input.hint="Enter new note"
+        // here we set the message of our alert dialog
+        //dialogBuilder.setMessage("Update Note")
+        // positive button text and action
+        dialogBuilder.setPositiveButton("ok", DialogInterface.OnClickListener { dialog, id ->
+            var dbhlr = DBHlr2(this)
+            val str = input.text.toString()
+        //    dbhlr.update(s1, str)
+            println("updated item")
+            //retrieve data and update recycler view
+        })
+                // negative button text and action
+                .setNegativeButton("cancel", DialogInterface.OnClickListener { dialog, id ->
+                })
+        // create dialog box
+        val alert = dialogBuilder.create()
+        // set title for alert dialog box
+        alert.setTitle("Update Note")
+        // add the Edit Text
+        alert.setView(input)
+        // show alert dialog
+        alert.show()
+    }
 
+    fun delete(type:String , s1:String){
+        var dbhlr = DBHlr2(this)
+        dbhlr.delete(type,s1)
+        println("deleted item")
+        //retrieve data and update recycler view
+        val list = dbhlr.retrive("android")
+        myRv.adapter = RecyclerViewAdapter(this,list)
+        myRv.layoutManager = LinearLayoutManager(this)
+    }
+
+    fun myRv(){
+        myRv.adapter = RecyclerViewAdapter(this,list)
+        myRv.layoutManager = LinearLayoutManager(this)
     }
 }
+
+
+
 
 
 

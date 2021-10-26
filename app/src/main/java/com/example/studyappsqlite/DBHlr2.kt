@@ -43,7 +43,7 @@ class DBHlr2(context: Context?) : SQLiteOpenHelper(context, "details.db", null, 
                     val title: String = cursor.getString(cursor.getColumnIndex("Title"))
                     val des: String = cursor.getString(cursor.getColumnIndex("Des"))
                     val explain: String = cursor.getString(cursor.getColumnIndex("More"))
-                    list.add(Note("", title, explain, des))
+                    list.add(Note("kotlin", title, explain, des))
                     cursor.moveToNext()
                 }
             }
@@ -54,7 +54,7 @@ class DBHlr2(context: Context?) : SQLiteOpenHelper(context, "details.db", null, 
                     val title: String = cursor.getString(cursor.getColumnIndex("Title"))
                     val des: String = cursor.getString(cursor.getColumnIndex("Des"))
                     val explain: String = cursor.getString(cursor.getColumnIndex("More"))
-                    list.add(Note("",title,explain,des))
+                    list.add(Note("android",title,explain,des))
                     cursor.moveToNext()
                 }
             }
@@ -68,18 +68,23 @@ class DBHlr2(context: Context?) : SQLiteOpenHelper(context, "details.db", null, 
         sql.update("kotlin",  cv, "Title=?", arrayOf(s1))
     }
 
-    fun delete(s1 :String){
-        sql.delete("kotlin", "Title=?", arrayOf(s1))
-    }
 
 
-    fun update2(s1 :String , news1 :String){
+    fun update(s1 :String ,s2 :String, s3 :String, news1 :String,news2 :String,news3 :String){
         val cv = ContentValues()
         cv.put("Title", news1)
+        cv.put("More", news2)
+        cv.put("Des", news3)
         sql.update("android",  cv, "Title=?", arrayOf(s1))
+        sql.update("android",  cv, "More=?", arrayOf(s1))
+        sql.update("android",  cv, "Des=?", arrayOf(s1))
     }
 
-    fun delete2(s1 :String){
-        sql.delete("android", "Title=?", arrayOf(s1))
+    fun delete(type:String, s1 :String){
+        if(type=="android") {
+            sql.delete("android", "Title=?", arrayOf(s1))
+        }else{
+            sql.delete("kotlin", "Title=?", arrayOf(s1))
+        }
     }
 }

@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class Kotlin : AppCompatActivity() {
+    var list = ArrayList<Note>()
+    lateinit var myRv : RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kotlin)
@@ -30,14 +32,28 @@ class Kotlin : AppCompatActivity() {
 */
         btnAdd.setOnClickListener {
             val intent = Intent(this, NewNote::class.java)
-            intent.putExtra("kotlin",true)
+            intent.putExtra("kotlin","kotlin")
             startActivity(intent)
         }
-        val list = dbhlr.retrive("kotlin")
-        val myRv = findViewById<RecyclerView>(R.id.myRv)
-        myRv.adapter = RecyclerViewAdapter(list)
+        list = dbhlr.retrive("kotlin")
+        myRv = findViewById<RecyclerView>(R.id.myRv)
+        myRv.adapter = RecyclerViewAdapter(this,list)
         myRv.layoutManager = LinearLayoutManager(this)
 
+    }
+
+    fun delete(type:String , s1:String){
+        var dbhlr = DBHlr2(this)
+        dbhlr.delete(type,s1)
+        println("deleted item")
+        //retrieve data and update recycler view
+        val list = dbhlr.retrive("android")
+        myRv.adapter = RecyclerViewAdapter(this, list)
+        myRv.layoutManager = LinearLayoutManager(this)
+    }
+    fun myRv(){
+        myRv.adapter = RecyclerViewAdapter(this,list)
+        myRv.layoutManager = LinearLayoutManager(this)
     }
 }
 

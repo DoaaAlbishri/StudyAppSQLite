@@ -19,10 +19,10 @@ class NewNote : AppCompatActivity() {
         eddes=findViewById(R.id.eddes)
         button5=findViewById(R.id.button5)
         val intent =intent
-        val kotlin = intent.getBooleanExtra("kotlin",false)
+        val kotlin = intent.getStringExtra("kotlin")
         var dbhlr :DBHlr2 = DBHlr2(this)
         button5.setOnClickListener {
-            if(kotlin){
+            if(kotlin=="kotlin"){
                 var title =edtitle.text.toString()
                 var expl =edmore.text.toString()
                 var des =eddes.text.toString()
