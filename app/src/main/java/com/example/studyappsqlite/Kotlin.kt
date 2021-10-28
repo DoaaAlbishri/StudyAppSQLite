@@ -42,12 +42,16 @@ class Kotlin : AppCompatActivity() {
             val eddes = dialogView.findViewById<EditText>(R.id.eddes1)
             val tvBtn = dialogView.findViewById<Button>(R.id.button6)
             tvBtn.setOnClickListener {
-                var title =edtitle.text.toString()
-                var expl =edmore.text.toString()
-                var des =eddes.text.toString()
-                dbhlr.savedata("kotlin",title,expl,des)
-                Toast.makeText(this, "added successfully", Toast.LENGTH_SHORT).show()
-                myRv()
+                if (edtitle.text.isEmpty() || edmore.text.isEmpty() || eddes.text.isEmpty())
+                    Toast.makeText(this, "Fill all fields please", Toast.LENGTH_SHORT).show()
+                else {
+                    var title = edtitle.text.toString()
+                    var expl = edmore.text.toString()
+                    var des = eddes.text.toString()
+                    dbhlr.savedata("kotlin", title, expl, des)
+                    Toast.makeText(this, "added successfully", Toast.LENGTH_SHORT).show()
+                    myRv()
+                }
             }
             dialogBuilder.show()
         }
@@ -65,12 +69,16 @@ class Kotlin : AppCompatActivity() {
         val eddes = dialogView.findViewById<EditText>(R.id.eddes2)
         val tvBtn = dialogView.findViewById<Button>(R.id.button7)
         tvBtn.setOnClickListener {
-            var title =edtitle.text.toString()
-            var expl =edmore.text.toString()
-            var des =eddes.text.toString()
-            dbhlr.update("kotlin",s1,s2,s3,title,expl,des)
-            Toast.makeText(this, "updated successfully", Toast.LENGTH_SHORT).show()
-            myRv()
+            if (edtitle.text.isEmpty() || edmore.text.isEmpty() || eddes.text.isEmpty())
+                Toast.makeText(this, "Fill all fields please", Toast.LENGTH_SHORT).show()
+            else {
+                var title = edtitle.text.toString()
+                var expl = edmore.text.toString()
+                var des = eddes.text.toString()
+                dbhlr.update("kotlin", s1, s2, s3, title, expl, des)
+                Toast.makeText(this, "updated successfully", Toast.LENGTH_SHORT).show()
+                myRv()
+            }
         }
         dialogBuilder.show()
     }
